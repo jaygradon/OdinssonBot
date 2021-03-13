@@ -1,0 +1,24 @@
+{
+  "name": "odinssonbot",
+  "version": "1.0.0",
+  "description": "Bot for assisting in the running of a dedicated Valheim Server.",
+  "main": "app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jaygradon/OdinssonBot.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jaygradon/OdinssonBot/issues"
+  },
+  "homepage": "https://github.com/jaygradon/OdinssonBot#readme",
+  "dependencies": {
+    "discord.js": "^12.5.1",
+    "eslint": "^7.22.0"
+  }
+}
