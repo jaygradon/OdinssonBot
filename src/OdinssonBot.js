@@ -51,17 +51,22 @@ class OdinssonBot {
       }
 
       if (message.mentions.users.has(this.config.client_id)) {
-        var messageContent = message.content.replace(`<@${this.config.client_id}>`, '').trim();
+        let foundMatch = false;
+        let content = message.content.replace(`<@!${this.config.client_id}>`, '').trim();
         this.commands.every((command) => {
           let args;
-          if (args = command.match(messageContent)) {
-            this.log('info', `Matched command ${command.name} with message: ${message.content}`);
+          if (args = command.match(content)) {
+            this.log('info', `Matched ${command.name}: "${content}"`);
             command.respond(message, args);
+            foundMatch = true;
             return false; // Stop iterating
           }
           return true; // Keep iterating
         });
-        this.log('info', `Failed to match message: ${message.content}`);
+
+        if (!foundMatch) {
+          this.log('info', `Failed to match: "${content}"`);
+        }
       }
     });
 
