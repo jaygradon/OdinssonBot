@@ -1,6 +1,9 @@
 const execute = require('child_process').exec;
 
 class ValheimWorldSaveUtility {
+  /**
+   * @param {string} valheimServerScript path
+   */
   constructor(valheimServerScript = "/opt/Dedicated_Valheim_Server_Script/menu.sh") {
     this.valheimServerScript = valheimServerScript;
   }

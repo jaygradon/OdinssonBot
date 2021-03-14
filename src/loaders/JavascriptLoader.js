@@ -1,23 +1,23 @@
+const Command = require('../commands/Command.js');
+
 const filesystem = require('fs');
 const path = require('path');
-const Command = require('../commands/Command.js');
-const ConsoleLogger = require('../loggers/ConsoleLogger.js');
 
 class JavascriptLoader {
   /**
-   * @param {Array} loggers to log to.
+   * @param {Logger} logger to log to.
    */
-  constructor(loggers = [new ConsoleLogger()]) {
+  constructor(logger) {
     this.commands = []
 
     // Logging providers to log with.
-    this.loggers = loggers;
+    this.logger = logger;
   }
 
   /**
    * Recursively loads javascript command objects in a given file into a list returned of commands.
    *
-   * @param {string} directory to load the javascript command object from.
+   * @param {string} directory to load the javascript command objects from.
    */
   load(directory) {
 
@@ -28,13 +28,13 @@ class JavascriptLoader {
         if (file.match(/\.js$/)) {
           delete require.cache[require.resolve(path.join(directory, file))];
           let commandFile = require(path.join(directory, file));
-          this.log('info', `Found: ${commandFile.name}`);
+          this.logger.log(`Found: ${commandFile.name}`);
           if (this.extendsCommand(commandFile)) {
-            let command = new commandFile(this.loggers);
+            let command = new commandFile(this.logger);
             commands.push(command);
-            this.log('info', `Loaded: ${command.name}`);
+            this.logger.log(`Loaded: ${command.name}`);
           } else {
-            this.log('info', `Not Loading: ${commandFile.name}`);
+            this.logger.log(`Not Loading: ${commandFile.name}`);
           }
         }
 
@@ -47,24 +47,17 @@ class JavascriptLoader {
     return commands;
   }
 
+  /**
+   * Tests whether the given object extends the Command class.
+   *
+   * @param {Command} command
+   */
   extendsCommand(command) {
     if (command.toString().split('\n')[0].includes(`extends ${Command.name}`)) {
       return true;
     }
 
     return false;
-  }
-
-  /**
-   * Logs the given message to all loggers.
-   *
-   * @param {string} level of the message to log at e.g. Info, Error
-   * @param {string} message to log
-   */
-  log(level, message) {
-    this.loggers.forEach((logger) =>  {
-      logger.log(level, message);
-    });
   }
 }
 
