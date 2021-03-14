@@ -1,5 +1,6 @@
 const Discord = require('discord.js');
 const ConsoleLogger = require('./loggers/ConsoleLogger.js');
+const ValheimWorldSaveUtility = require('./utilities/ValheimWorldSaveUtility.js')
 
 /*
  *  Odinsson Bot for Discord. Assists in the running of a Valheim server based on https://github.com/Nimdy/Dedicated_Valheim_Server_Script and AWS EC2.
@@ -20,8 +21,11 @@ class OdinssonBot {
     // Top level commands that can be executed via discord messages
     this.commands = commands;
 
-    // Logging providers to log with.
+    // Logging providers to log with
     this.loggers = loggers;
+
+    // Utility used for Valheim save manipulation
+    this.saveUtility = new ValheimWorldSaveUtility();
   }
 
   /**
@@ -31,6 +35,21 @@ class OdinssonBot {
    */
   load(commands) {
     this.commands.push.apply(this.commands, commands);
+  }
+
+  /**
+   * Prepares the server for upcoming Valheim sessions.
+   */
+  prepare() {
+    this.log('info', 'Odinsson is remembering the tales of the 10th world!')
+    this.saveUtility.backup()
+      .then((stdout, stderr) => {
+        this.log(stdout);
+        this.log(stderr);
+      })
+      .catch((err) => {
+        this.log(err);
+      });
   }
 
   /**
