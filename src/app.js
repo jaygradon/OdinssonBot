@@ -1,6 +1,8 @@
 const OdinssonBot = require('./OdinssonBot.js');
 
+const MasterLogger = require('./loggers/MasterLogger.js');
 const ConsoleLogger = require('./loggers/ConsoleLogger.js');
+
 const JavascriptLoader = require('./loaders/JavascriptLoader.js');
 
 const config = require('./odinsson_config.json');
@@ -11,14 +13,16 @@ const path = require('path');
 const loggers = []
 loggers.push(new ConsoleLogger());
 
+const masterLogger = new MasterLogger(loggers);
+
 /*********** LOAD COMMANDS ***********/
 
-const loader = new JavascriptLoader(loggers);
+const loader = new JavascriptLoader(masterLogger);
 const commands = loader.load(path.join(__dirname, 'commands'))
 
 /************* START BOT *************/
 
-const odinsson = new OdinssonBot(config, commands, loggers);
+const odinsson = new OdinssonBot(config, commands, masterLogger);
 odinsson.prepare();
 odinsson.load(commands);
 odinsson.listen();

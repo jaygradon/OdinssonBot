@@ -1,5 +1,4 @@
 const Command = require('./Command.js');
-const ConsoleLogger = require('../loggers/ConsoleLogger.js');
 
 const pongStrings = [
   "I sail the seas of Valhalla!",
@@ -12,10 +11,10 @@ const pongStrings = [
  */
 class PingCommand extends Command {
   /**
-   * @param {Array} loggers to log to.
+   * @param {Logger} logger to log to.
    */
-  constructor(loggers = [new ConsoleLogger()]) {
-    super(loggers);
+  constructor(logger) {
+    super(logger);
 
     // Name of the command (for logging and help purposes).
     this.name = "Ping";
@@ -28,7 +27,7 @@ class PingCommand extends Command {
    * Responds to the given message with a random 'pong-like' string .
    *
    * @param {Object} message from the discord server.
-   * @param {Array} args from the message match result.
+   * @param {array} args from the message match result.
    */
   respond(message, args) {
     // Return a random string from pongStrings
