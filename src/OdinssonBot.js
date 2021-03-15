@@ -28,20 +28,22 @@ class OdinssonBot {
   }
 
   /**
+   * Prepares the server for upcoming Valheim sessions.
+   */
+  prepare() {
+    this.logger.log('Odinsson is remembering tales of the 10th world!')
+    if (this.config.backup_schedules.length > 0) {
+      this.ValheimWorldBackupJob.start(this.config.backup_schedules.split(','));
+    }
+  }
+
+  /**
    * Takes in an array of commands and add it to the bots top level commands.
    *
    * @param {Command[]} commands to be executed on messages received.
    */
   load(commands) {
     this.commands.push.apply(this.commands, commands);
-  }
-
-  /**
-   * Prepares the server for upcoming Valheim sessions.
-   */
-  prepare() {
-    this.logger.log('Odinsson is remembering tales of the 10th world!')
-    this.ValheimWorldBackupJob.start(this.config.backup_schedules.split(','));
   }
 
   /**
