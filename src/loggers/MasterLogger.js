@@ -17,8 +17,8 @@ class MasterLogger extends Logger {
   /**
    * Logs the given message to all loggers.
    *
-   * @param {string} message to log
-   * @param {string} level of the message to log at e.g. Info, Error
+   * @param {string} message to log.
+   * @param {string} level of the message to log at e.g. Info, Error.
    */
   log(message, level='info') {
     this.loggers.forEach((logger) =>  {

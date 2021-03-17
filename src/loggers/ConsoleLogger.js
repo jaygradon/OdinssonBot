@@ -11,8 +11,8 @@ class ConsoleLogger extends Logger {
   /**
    * Logs the given message to console.
    *
-   * @param {string} message to log
-   * @param {string} level of the message to log at e.g. Info, Error
+   * @param {string} message to log.
+   * @param {string} level of the message to log at e.g. Info, Error.
    */
   log(message, level = 'info') {
     let now = new Date().toString();
