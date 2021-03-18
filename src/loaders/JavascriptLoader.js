@@ -28,13 +28,13 @@ class JavascriptLoader {
         if (file.match(/\.js$/)) {
           delete require.cache[require.resolve(path.join(directory, file))];
           let commandFile = require(path.join(directory, file));
-          this.logger.log(`Found: ${commandFile.name}`);
+          this.logger.log(`Found command: ${commandFile.name}`);
           if (this.extendsCommand(commandFile)) {
             let command = new commandFile(this.logger);
             commands.push(command);
-            this.logger.log(`Loaded: ${command.name}`);
+            this.logger.log(`Loaded command: ${command.name}`);
           } else {
-            this.logger.log(`Not Loading: ${commandFile.name}`);
+            this.logger.log(`Not Loading command: ${commandFile.name}`);
           }
         }
 

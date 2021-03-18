@@ -1,6 +1,17 @@
 {
-    "token": "",
-    "client_id": "",
-    "client_secret": "",
-    "public_key": ""
+    "secrets": {
+      "token": "",
+      "client_id": "",
+      "client_secret": "",
+      "public_key": ""
+    },
+    "schedules": {
+      "backups": []
+    },
+    "databases": {
+      "json_location": ""
+    },
+    "logging": {
+      "file_location": ""
+    }
 }

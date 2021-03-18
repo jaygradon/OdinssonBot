@@ -8,6 +8,10 @@ class ValheimWorldSaveUtility {
     this.valheimServerScript = valheimServerScript;
   }
 
+  /**
+   * Backs up the valheim server world.
+   * Utilizes the Dedicated Valheim server bash scripts.
+   */
   async backup() {
     return new Promise((resolve, reject) => {
       execute(`echo 'y' | ${this.valheimServerScript} backup`, (err, stdout, stderr) => {
