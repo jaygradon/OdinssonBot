@@ -5,7 +5,7 @@ const path = require('path');
 
 class JavascriptLoader {
   /**
-   * @param {Logger} logger to log to.
+   * @param {Logger} logger used to log.
    */
   constructor(logger) {
     this.commands = []

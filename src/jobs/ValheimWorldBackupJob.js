@@ -1,16 +1,16 @@
 const cron = require('node-cron');
-const ValheimWorldSaveUtility = require('../utilities/ValheimWorldSaveUtility.js')
+const ValheimWorldSaveHelper = require('../helpers/ValheimWorldSaveHelper.js')
 
 class ValheimWorldBackupJob {
   /**
-   * @param {Logger} logger to log to.
+   * @param {Logger} logger used to log.
    */
   constructor(logger) {
     // Logging provider to log with
     this.logger = logger;
 
-    // Utility used for Valheim save manipulation
-    this.saveUtility = new ValheimWorldSaveUtility();
+    // Helper used for Valheim save manipulation
+    this.saveHelper = new ValheimWorldSaveHelper();
   }
 
   /**
@@ -22,7 +22,7 @@ class ValheimWorldBackupJob {
     schedules.forEach((schedule) => {
       this.logger.log(`Scheduling backup: ${schedule}`);
       cron.schedule(schedule, () => {
-        this.saveUtility.backup()
+        this.saveHelper.backup()
         .then((stdout, stderr) => {
           this.logger.log(stdout);
           this.logger.log(stderr);

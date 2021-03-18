@@ -5,7 +5,7 @@ const Logger = require('./Logger.js');
  */
 class MasterLogger extends Logger {
   /**
-   * @param {array} loggers to log to.
+   * @param {array} loggers used to log with.
    */
   constructor(loggers = [new ConsoleLogger()]) {
     super();

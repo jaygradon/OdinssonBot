@@ -1,6 +1,6 @@
 const execute = require('child_process').exec;
 
-class ValheimWorldSaveUtility {
+class ValheimWorldSaveHelper {
   /**
    * @param {string} valheimServerScript path
    */
@@ -25,4 +25,4 @@ class ValheimWorldSaveUtility {
   }
 }
 
-module.exports = ValheimWorldSaveUtility;
+module.exports = ValheimWorldSaveHelper;
