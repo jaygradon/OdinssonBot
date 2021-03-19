@@ -23,31 +23,21 @@ class ValheimServerStatusEmbedHelper {
    *
    * @param {array} guilds to send online status to.
    */
-  sendOnlineStatus(guilds) {
+  async sendOnlineStatus(guilds) {
     this.logger.log('Odinsson is blowing the horns of Valheim!');
-    return new Promise((resolve, reject) => {
-      guilds.forEach((guild) => {
-        // Get the first channel in the guild
-        this.logger.log(`Found guild: ${guild.name}, ${guild.id}`);
-        // TODO add command to set channel that should be used for the guild
-        const channel = guild.channels.cache.filter((channel) => channel.isText()).find(channel => channel.position === 0);
-        this.logger.log(`Found channel: ${channel.name}, ${channel.id}`);
+    guilds.forEach(async (guild) => {
+      // Get the first channel in the guild
+      this.logger.log(`Found guild: ${guild.name}, ${guild.id}`);
+      // TODO add command to set channel that should be used for the guild
+      const channel = guild.channels.cache.filter((channel) => channel.isText()).find(channel => channel.position === 0);
+      this.logger.log(`Found channel: ${channel.name}, ${channel.id}`);
 
-        // Delete previous embed as embedding new images is not supported
-        this.deleteEmbed(channel)
-          .then(() => {
-            // Send new embedded status
-            return this.makeOnlineEmbed()
-          })
-          .then((embed) => {
-            return this.sendEmbed(channel, embed)
-          })
-          .then(() => {
-            resolve();
-          });
-      });
+      // Delete previous embed as embedding new images is not supported
+      await this.deleteEmbed(channel);
+      // Send new embedded status
+      const embed = await this.makeOnlineEmbed();
+      this.sendEmbed(channel, embed);
     });
-
   }
 
   /**
@@ -55,31 +45,22 @@ class ValheimServerStatusEmbedHelper {
    *
    * @param {array} guilds to send offline status to.
    */
-  sendOfflineStatus(guilds) {
+  async sendOfflineStatus(guilds) {
     this.logger.log('The path to Valheim is closing!');
-    return new Promise((resolve, reject) => {
-      guilds.forEach((guild) => {
-        // Get the first channel in the guild
-        this.logger.log(`Found guild: ${guild.name}, ${guild.id}`);
-        // TODO add command to set channel that should be used for the guild
-        const channel = guild.channels.cache.filter((channel) => channel.isText()).find(channel => channel.position === 0);
-        this.logger.log(`Found channel: ${channel.name}, ${channel.id}`);
+    guilds.forEach(async (guild) => {
+      // Get the first channel in the guild
+      this.logger.log(`Found guild: ${guild.name}, ${guild.id}`);
+      // TODO add command to set channel that should be used for the guild
+      const channel = guild.channels.cache.filter((channel) => channel.isText()).find(channel => channel.position === 0);
+      this.logger.log(`Found channel: ${channel.name}, ${channel.id}`);
 
-        this.getEmbed(channel)
-          .then((message) => {
-            return  this.makeOfflineEmbed(message.embeds[0]);
-          })
-          .then((embed) => {
-            if (message) {
-              return  this.editEmbed(message, embed);
-            } else {
-              return  this.sendEmbed(channel, embed);
-            }
-          })
-          .then(() => {
-            resolve()
-          });
-      });
+      const message = await this.getEmbed(channel);
+      const embed = await this.makeOfflineEmbed(message.embeds[0]);
+      if (message) {
+        this.editEmbed(message, embed)
+      } else {
+        this.sendEmbed(channel, embed)
+      }
     });
   }
 
@@ -88,24 +69,16 @@ class ValheimServerStatusEmbedHelper {
    *
    * @param {GuildChannel} channel to get embed from.
    */
-  getEmbed(channel) {
-    return new Promise((resolve, reject) => {
-      channel.messages.fetchPinned()
-        .then((messages) => {
-          if (messages.size > 0 ) {
-            // Fetch the pinned message made by Odinsson. For now, we assume Odinsson will only pin the server status
-            const message = messages.filter(message => message.author.id = this.config.secrets.client_id).first();
-            if (message) {
-              this.logger.log(`Got pinned message: ${message.id}`);
-              resolve(message);
-            } else {
-              resolve();
-            }
-          } else {
-            resolve();
-          }
-        });
-    });
+  async getEmbed(channel) {
+    const messages = await channel.messages.fetchPinned();
+    if (messages.size > 0 ) {
+      // Fetch the pinned message made by Odinsson. For now, we assume Odinsson will only pin the server status
+      const message = messages.filter(message => message.author.id = this.config.secrets.client_id).first();
+      if (message) {
+        this.logger.log(`Got pinned message: ${message.id}`);
+        return message;
+      }
+    }
   }
 
   /**
@@ -114,16 +87,11 @@ class ValheimServerStatusEmbedHelper {
    * @param {GuildChannel} channel to send new embed to.
    * @param {MessageEmbed} embed to send.
    */
-  sendEmbed(channel, embed) {
-    return new Promise((resolve, reject) => {
-        channel.send(embed)
-          .then((message) => {
-            this.logger.log(`Sent new message: ${message.id}`);
-            message.pin();
-            // TODO delete pin notification message
-            resolve();
-          });
-    });
+  async sendEmbed(channel, embed) {
+    const message = await channel.send(embed);
+    this.logger.log(`Sent new message: ${message.id}`);
+    message.pin();
+    // TODO delete pin notification message
   }
 
   /**
@@ -132,15 +100,9 @@ class ValheimServerStatusEmbedHelper {
    * @param {Message} message to edit.
    * @param {MessageEmbed} embed to edit message with.
    */
-  editEmbed(message, embed) {
-    return new Promise((resolve, reject) => {
-        this.logger.log(`Editing pinned message: ${message.id}`);
-
-        message.edit(embed)
-          .then(() => {
-            resolve();
-          });
-    });
+  async editEmbed(message, embed) {
+    this.logger.log(`Editing pinned message: ${message.id}`);
+    await message.edit(embed);
   }
 
   /**
@@ -148,62 +110,51 @@ class ValheimServerStatusEmbedHelper {
    *
    * @param {GuildChannel} channel to delete pinned embeds in.
    */
-  deleteEmbed(channel) {
-    return new Promise((resolve, reject) => {
-      channel.messages.fetchPinned()
-        .then((messages) => {
-          if (messages.size > 0 ) {
-            // Fetch the pinned message made by Odinsson. For now, we assume Odinsson will only pin the server status
-            const message = messages.filter(message => message.author.id = this.config.secrets.client_id).first();
-            if (message) {
-              this.logger.log(`Deleting pinned message: ${message.id}`);
-              message.delete();
-            }
-          }
-          resolve();
-        });
-    });
+  async deleteEmbed(channel) {
+    const messages = await channel.messages.fetchPinned();
+    if (messages.size > 0 ) {
+      // Fetch the pinned message made by Odinsson. For now, we assume Odinsson will only pin the server status
+      const message = messages.filter(message => message.author.id = this.config.secrets.client_id).first();
+      if (message) {
+        this.logger.log(`Deleting pinned message: ${message.id}`);
+        await message.delete();
+      }
+    }
   }
 
   /**
    * Creates an "online" embed status message.
    */
-  makeOnlineEmbed() {
-    return new Promise((resolve, reject) => {
+  async makeOnlineEmbed() {
       const screenshots = filesystem.readdirSync(`${this.config.images}/screenshots`);
       const randomScreenshot = screenshots[Math.floor(Math.random() * screenshots.length)];
       const randomTitle = this.config.status_embed.online_titles[Math.floor(Math.random() * this.config.status_embed.online_titles.length)];
       const randomDescription = this.config.status_embed.descriptions[Math.floor(Math.random() * this.config.status_embed.descriptions.length)];
       const randomFooter = this.config.status_embed.footers[Math.floor(Math.random() * this.config.status_embed.footers.length)];
-
-      fetch(this.config.aws.ip_url)
-        .then((response) => response.text())
-        .then((text) => {
-          resolve(new Discord.MessageEmbed()
-            .setColor(this.config.status_embed.online_color)
-            .setTitle(randomTitle)
-            .setDescription(`${randomDescription} ${text}:2456!`)
-            .attachFiles([`${this.config.images}/hugin-sticker_256x205.png`, `${this.config.images}/screenshots/${randomScreenshot}`])
-            .setThumbnail("attachment://hugin-sticker_256x205.png")
-            .setImage(`attachment://${randomScreenshot}`)
-            .setFooter(randomFooter)
-            .setTimestamp()
-          );
-        })
-        .catch((error) => {
-          this.logger.log(error, 'error');
-          resolve(new Discord.MessageEmbed()
-            .setColor(this.config.status_embed.online_color)
-            .setTitle(randomTitle)
-            .setDescription(`${randomDescription} steam!`)
-            .attachFiles([`${this.config.images}/hugin-sticker_256x205.png`, `${this.config.images}/screenshots/${randomScreenshot}`])
-            .setThumbnail("attachment://hugin-sticker_256x205.png")
-            .setImage(`attachment://${randomScreenshot}`)
-            .setFooter(randomFooter)
-            .setTimestamp()
-          );
-        });
-    });
+    try {
+      const response = await fetch(this.config.aws.ip_url);
+      const text = await response.text();
+      return new Discord.MessageEmbed()
+        .setColor(this.config.status_embed.online_color)
+        .setTitle(randomTitle)
+        .setDescription(`${randomDescription} ${text}:2456!`)
+        .attachFiles([`${this.config.images}/hugin-sticker_256x205.png`, `${this.config.images}/screenshots/${randomScreenshot}`])
+        .setThumbnail("attachment://hugin-sticker_256x205.png")
+        .setImage(`attachment://${randomScreenshot}`)
+        .setFooter(randomFooter)
+        .setTimestamp();
+    } catch (error) {
+      this.logger.log(error, 'error');
+      return new Discord.MessageEmbed()
+        .setColor(this.config.status_embed.online_color)
+        .setTitle(randomTitle)
+        .setDescription(`${randomDescription} steam!`)
+        .attachFiles([`${this.config.images}/hugin-sticker_256x205.png`, `${this.config.images}/screenshots/${randomScreenshot}`])
+        .setThumbnail("attachment://hugin-sticker_256x205.png")
+        .setImage(`attachment://${randomScreenshot}`)
+        .setFooter(randomFooter)
+        .setTimestamp();
+    }
   }
 
   /**
@@ -212,36 +163,32 @@ class ValheimServerStatusEmbedHelper {
    * @param {MessageEmbed} embed to edit.
    */
   makeOfflineEmbed(embed) {
-    return new Promise((resolve, reject) => {
-      const randomTitle = this.config.status_embed.offline_titles[Math.floor(Math.random() * this.config.status_embed.offline_titles.length)];
-      const randomDescription = this.config.status_embed.descriptions[Math.floor(Math.random() * this.config.status_embed.descriptions.length)];
-      const randomFooter = this.config.status_embed.footers[Math.floor(Math.random() * this.config.status_embed.footers.length)];
+    const randomTitle = this.config.status_embed.offline_titles[Math.floor(Math.random() * this.config.status_embed.offline_titles.length)];
+    const randomDescription = this.config.status_embed.descriptions[Math.floor(Math.random() * this.config.status_embed.descriptions.length)];
+    const randomFooter = this.config.status_embed.footers[Math.floor(Math.random() * this.config.status_embed.footers.length)];
 
-      if (embed) {
-        resolve(new Discord.MessageEmbed(embed)
-          .setColor(this.config.status_embed.offline_color)
-          .setTitle(randomTitle)
-          .setDescription(`${randomDescription} ${this.config.status_embed.online_hours_blurb}`)
-          .attachFiles()
-          .setFooter(randomFooter)
-          .setTimestamp()
-        );
-      } else {
-        const screenshots = filesystem.readdirSync("${this.config.images}/screenshots");
-        const randomScreenshot = screenshots[Math.floor(Math.random() * screenshots.length)];
+    if (embed) {
+      return new Discord.MessageEmbed(embed)
+        .setColor(this.config.status_embed.offline_color)
+        .setTitle(randomTitle)
+        .setDescription(`${randomDescription} ${this.config.status_embed.online_hours_blurb}`)
+        .attachFiles()
+        .setFooter(randomFooter)
+        .setTimestamp();
+    } else {
+      const screenshots = filesystem.readdirSync("${this.config.images}/screenshots");
+      const randomScreenshot = screenshots[Math.floor(Math.random() * screenshots.length)];
 
-        resolve(new Discord.MessageEmbed()
-          .setColor(this.config.status_embed.offline_color)
-          .setTitle(randomTitle)
-          .setDescription(`${randomDescription} ${this.config.status_embed.online_hours_blurb}`)
-          .attachFiles(["${this.config.images}/hugin-sticker_256x205.png", `${this.config.images}/screenshots/${randomScreenshot}`])
-          .setThumbnail("attachment://hugin-sticker_256x205.png")
-          .setImage(`attachment://${randomScreenshot}`)
-          .setFooter(randomFooter)
-          .setTimestamp()
-        );
-      }
-    });
+      return new Discord.MessageEmbed()
+        .setColor(this.config.status_embed.offline_color)
+        .setTitle(randomTitle)
+        .setDescription(`${randomDescription} ${this.config.status_embed.online_hours_blurb}`)
+        .attachFiles([`${this.config.images}/hugin-sticker_256x205.png`, `${this.config.images}/screenshots/${randomScreenshot}`])
+        .setThumbnail("attachment://hugin-sticker_256x205.png")
+        .setImage(`attachment://${randomScreenshot}`)
+        .setFooter(randomFooter)
+        .setTimestamp();
+    }
   }
 }
 

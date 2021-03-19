@@ -11,7 +11,7 @@ class ValheimWorldBackupJob {
     this.logger = logger;
 
     // Helper used for Valheim save manipulation
-    this.saveHelper = new ValheimWorldSaveHelper();
+    this.saveHelper = new ValheimWorldSaveHelper(this.logger);
   }
 
   /**
@@ -20,19 +20,18 @@ class ValheimWorldBackupJob {
    * @param {array} schedules defined as a list of cron schedules.
    */
   start(schedules) {
-    schedules.forEach((schedule) => {
+    for (const scheduleKey in schedules) {
+      const schedule = schedules[scheduleKey];
       this.logger.log(`Scheduling backup: ${schedule}`);
-      cron.schedule(schedule, () => {
-        this.saveHelper.backup()
-        .then((stdout, stderr) => {
-          this.logger.log(stdout);
-          this.logger.log(stderr);
-        })
-        .catch((err) => {
-          this.logger.log(err);
-        });
+      cron.schedule(schedule, async () => {
+        try {
+          this.logger.log('Making a backup!');
+          this.saveHelper.backup();
+        } catch (error) {
+          this.logger.log(error);
+        }
       });
-    });
+    }
   }
 }
 

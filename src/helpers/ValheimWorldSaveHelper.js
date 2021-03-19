@@ -4,8 +4,9 @@ class ValheimWorldSaveHelper {
   /**
    * @param {string} valheimServerScript path
    */
-  constructor(valheimServerScript = "/opt/Dedicated_Valheim_Server_Script/menu.sh") {
+  constructor(logger, valheimServerScript = "/opt/Dedicated_Valheim_Server_Script/menu.sh") {
     this.valheimServerScript = valheimServerScript;
+    this.logger = logger;
   }
 
   /**
@@ -13,14 +14,13 @@ class ValheimWorldSaveHelper {
    * Utilizes the Dedicated Valheim server bash scripts.
    */
   async backup() {
-    return new Promise((resolve, reject) => {
-      execute(`echo 'y' | ${this.valheimServerScript} backup`, (err, stdout, stderr) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(stdout, stderr);
-        }
-      });
+    execute(`echo 'y' | ${this.valheimServerScript} backup`, (err, stdout, stderr) => {
+      if (err) {
+        this.logger.log(err, 'error');
+      } else {
+        this.logger.log(stdout);
+        this.logger.log(stderr, 'error');
+      }
     });
   }
 }

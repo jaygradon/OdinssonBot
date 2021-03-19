@@ -48,19 +48,26 @@ class OdinssonBot {
     }
 
     // On process termination, update discord with a server offline message
-    process.on('SIGTERM', () => {
+    process.on('SIGTERM', async () => {
       this.logger.log('Odinsson is off to the mead hall!');
-      this.embedHelper.sendOfflineStatus(this.bot.guilds.cache)
-        .then(() => {
-          this.logger.log('Odinsson is face down in mead!');
-          process.exit(0);
-        })
-        .catch((error) => {
-          this.logger.log('Odinsson\'s mead has soured!');
-          this.logger.log(error, 'error');
-          // make sure to always exit the process!
-          process.exit(0);
-        });
+      try {
+        await this.embedHelper.sendOfflineStatus(this.bot.guilds.cache);
+        this.logger.log('Odinsson is face down in mead!');
+      } catch (error) {
+        this.logger.log('Odinsson\'s mead has soured!');
+        this.logger.log(error, 'error');
+      }
+
+      try {
+        this.bot.destroy();
+        this.logger.log('Odinsson is sleeping in the mead hall!');
+      } catch (error) {
+        this.logger.log('Odinsson\'s mead has leaked!');
+        this.logger.log(error, 'error');
+      }
+
+      // make sure to always exit the process!
+      process.exit(0);
     });
   }
 
