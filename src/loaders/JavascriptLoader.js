@@ -8,8 +8,6 @@ class JavascriptLoader {
    * @param {Logger} logger used to log.
    */
   constructor(logger) {
-    this.commands = []
-
     // Logging providers to log with.
     this.logger = logger;
   }
@@ -50,7 +48,7 @@ class JavascriptLoader {
   /**
    * Tests whether the given object extends the Command class.
    *
-   * @param {Command} command
+   * @param {Command} command to test.
    */
   extendsCommand(command) {
     if (command.toString().split('\n')[0].includes(`extends ${Command.name}`)) {

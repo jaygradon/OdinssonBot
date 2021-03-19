@@ -15,7 +15,7 @@ const path = require('path');
 
 const loggers = []
 loggers.push(new ConsoleLogger());
-loggers.push(new FileLogger(`${path.join(__dirname, config.logging.file_location)}/log.txt`));
+loggers.push(new FileLogger(`${config.logging.file_location}/log.txt`));
 
 const masterLogger = new MasterLogger(loggers);
 
@@ -26,7 +26,7 @@ const commands = loader.load(path.join(__dirname, 'commands'))
 
 /********** READY DATABASES **********/
 
-const database = new JsonDatabase(path.join(__dirname, config.databases.json_location), 'database.json', {}, masterLogger);
+const database = new JsonDatabase(path.join(config.databases.json_location, 'database.json'), {}, masterLogger);
 
 /************* START BOT *************/
 

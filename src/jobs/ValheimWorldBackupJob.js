@@ -1,5 +1,6 @@
-const cron = require('node-cron');
 const ValheimWorldSaveHelper = require('../helpers/ValheimWorldSaveHelper.js')
+
+const cron = require('node-cron');
 
 class ValheimWorldBackupJob {
   /**

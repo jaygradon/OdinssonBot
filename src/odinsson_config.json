@@ -12,11 +12,11 @@
     "backups": []
   },
   "databases": {
-    "json_location": "../data"
+    "json_location": "./data"
   },
   "images": "./images",
   "logging": {
-    "file_location": "../logs"
+    "file_location": "./logs"
   },
   "status_embed": {
     "online_color": "#39C16C",

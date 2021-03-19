@@ -1,7 +1,6 @@
 const Discord = require('discord.js');
 
 const ValheimWorldBackupJob = require('./jobs/ValheimWorldBackupJob.js');
-
 const ValheimServerStatusEmbedHelper = require('./helpers/ValheimServerStatusEmbedHelper.js');
 
 /*
@@ -48,6 +47,7 @@ class OdinssonBot {
       this.worldBackupJob.start(this.config.schedules.backups);
     }
 
+    // On process termination, update discord with a server offline message
     process.on('SIGTERM', () => {
       this.logger.log('Odinsson is off to the mead hall!');
       this.embedHelper.sendOfflineStatus(this.bot.guilds.cache)
@@ -57,7 +57,8 @@ class OdinssonBot {
         })
         .catch((error) => {
           this.logger.log('Odinsson\'s mead has soured!');
-          this.logger.log(error);
+          this.logger.log(error, 'error');
+          // make sure to always exit the process!
           process.exit(0);
         });
     });

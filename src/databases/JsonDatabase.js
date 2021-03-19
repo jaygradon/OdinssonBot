@@ -6,15 +6,14 @@ const path = require('path');
  */
 class JsonDatabase {
   /**
-   * @param {string} server directory of the database files.
-   * @param {string} database file to be used as json database.
+   * @param {string} database file to be used as json database. Will be created if it doesn't exist.
    */
-  constructor(server, database, schema, logger ) {
+  constructor(database, schema, logger ) {
     this.logger = logger;
-    this.databaseLocation = path.join(server, database);
+    this.databaseLocation = database;
 
-    if (!filesystem.existsSync(server)) {
-      filesystem.mkdirSync(server, { recursive: true });
+    if (!filesystem.existsSync(this.databaseLocation)) {
+      filesystem.mkdirSync(this.databaseLocation, { recursive: true });
     }
 
     if (!filesystem.existsSync(this.databaseLocation)) {
