@@ -20,7 +20,7 @@ class PingCommand extends Command {
     this.name = "Ping";
 
     // Key to match messages against. Defaults to an unmatchable key.
-    this.key = new RegExp("^(ping|hey)$", 'i');
+    this.key = new RegExp(".*", 'i');
   }
 
   /**
