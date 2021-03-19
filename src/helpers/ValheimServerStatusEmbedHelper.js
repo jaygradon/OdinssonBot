@@ -24,8 +24,9 @@ class ValheimServerStatusEmbedHelper {
    * @param {array} guilds to send online status to.
    */
   async sendOnlineStatus(guilds) {
-    this.logger.log('Odinsson is blowing the horns of Valheim!');
-    guilds.forEach(async (guild) => {
+    this.logger.log('Odinsson is blowing the horn of Valheim!');
+    for (let guild of guilds) {
+      guild = guild[1]; // I don't know why for of is returning an array with id and the guild object
       // Get the first channel in the guild
       this.logger.log(`Found guild: ${guild.name}, ${guild.id}`);
       // TODO add command to set channel that should be used for the guild
@@ -36,8 +37,8 @@ class ValheimServerStatusEmbedHelper {
       await this.deleteEmbed(channel);
       // Send new embedded status
       const embed = await this.makeOnlineEmbed();
-      this.sendEmbed(channel, embed);
-    });
+      await this.sendEmbed(channel, embed);
+    }
   }
 
   /**
@@ -46,8 +47,9 @@ class ValheimServerStatusEmbedHelper {
    * @param {array} guilds to send offline status to.
    */
   async sendOfflineStatus(guilds) {
-    this.logger.log('The path to Valheim is closing!');
-    guilds.forEach(async (guild) => {
+    this.logger.log('The portal to Valheim is closing!');
+    for (let guild of guilds) {
+      guild = guild[1]; // I don't know why for of is returning an array with id and the guild object
       // Get the first channel in the guild
       this.logger.log(`Found guild: ${guild.name}, ${guild.id}`);
       // TODO add command to set channel that should be used for the guild
@@ -57,11 +59,11 @@ class ValheimServerStatusEmbedHelper {
       const message = await this.getEmbed(channel);
       const embed = await this.makeOfflineEmbed(message.embeds[0]);
       if (message) {
-        this.editEmbed(message, embed)
+        await this.editEmbed(message, embed)
       } else {
-        this.sendEmbed(channel, embed)
+        await this.sendEmbed(channel, embed)
       }
-    });
+    }
   }
 
   /**
@@ -73,7 +75,7 @@ class ValheimServerStatusEmbedHelper {
     const messages = await channel.messages.fetchPinned();
     if (messages.size > 0 ) {
       // Fetch the pinned message made by Odinsson. For now, we assume Odinsson will only pin the server status
-      const message = messages.filter(message => message.author.id = this.config.secrets.client_id).first();
+      const message = messages.filter(message => message.author.id === this.config.secrets.client_id).first();
       if (message) {
         this.logger.log(`Got pinned message: ${message.id}`);
         return message;
@@ -114,7 +116,7 @@ class ValheimServerStatusEmbedHelper {
     const messages = await channel.messages.fetchPinned();
     if (messages.size > 0 ) {
       // Fetch the pinned message made by Odinsson. For now, we assume Odinsson will only pin the server status
-      const message = messages.filter(message => message.author.id = this.config.secrets.client_id).first();
+      const message = messages.filter(message => message.author.id === this.config.secrets.client_id).first();
       if (message) {
         this.logger.log(`Deleting pinned message: ${message.id}`);
         await message.delete();

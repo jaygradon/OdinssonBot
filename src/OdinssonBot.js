@@ -50,6 +50,7 @@ class OdinssonBot {
     // On process termination, update discord with a server offline message
     process.on('SIGTERM', async () => {
       this.logger.log('Odinsson is off to the mead hall!');
+
       try {
         await this.embedHelper.sendOfflineStatus(this.bot.guilds.cache);
         this.logger.log('Odinsson is face down in mead!');
@@ -58,13 +59,8 @@ class OdinssonBot {
         this.logger.log(error, 'error');
       }
 
-      try {
-        this.bot.destroy();
-        this.logger.log('Odinsson is sleeping in the mead hall!');
-      } catch (error) {
-        this.logger.log('Odinsson\'s mead has leaked!');
-        this.logger.log(error, 'error');
-      }
+      this.bot.destroy();
+      this.logger.log('Odinsson is sleeping in the mead hall!');
 
       // make sure to always exit the process!
       process.exit(0);
