@@ -12,8 +12,8 @@ class JsonDatabase {
     this.logger = logger;
     this.databaseLocation = database;
 
-    if (!filesystem.existsSync(this.databaseLocation)) {
-      filesystem.mkdirSync(this.databaseLocation, { recursive: true });
+    if (!filesystem.existsSync(path.dirname((this.databaseLocation)))) {
+      filesystem.mkdirSync(path.dirname((this.databaseLocation), { recursive: true }));
     }
 
     if (!filesystem.existsSync(this.databaseLocation)) {

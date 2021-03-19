@@ -37,13 +37,13 @@ class ValheimServerStatusEmbedHelper {
         this.deleteEmbed(channel)
           .then(() => {
             // Send new embedded status
-            this.makeOnlineEmbed()
-              .then((embed) => {
-                this.sendEmbed(channel, embed)
-                  .then(() => {
-                    resolve();
-                  });
-              });
+            return this.makeOnlineEmbed()
+          })
+          .then((embed) => {
+            return this.sendEmbed(channel, embed)
+          })
+          .then(() => {
+            resolve();
           });
       });
     });
@@ -67,20 +67,17 @@ class ValheimServerStatusEmbedHelper {
 
         this.getEmbed(channel)
           .then((message) => {
-            this.makeOfflineEmbed(message.embeds[0])
-              .then((embed) => {
-                if (message) {
-                  this.editEmbed(message, embed)
-                    .then(() => {
-                      resolve()
-                    });
-                } else {
-                  this.sendEmbed(channel, embed)
-                    .then(() => {
-                      resolve();
-                    });
-                }
-              });
+            return  this.makeOfflineEmbed(message.embeds[0]);
+          })
+          .then((embed) => {
+            if (message) {
+              return  this.editEmbed(message, embed);
+            } else {
+              return  this.sendEmbed(channel, embed);
+            }
+          })
+          .then(() => {
+            resolve()
           });
       });
     });

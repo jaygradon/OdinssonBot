@@ -12,11 +12,11 @@
     "backups": []
   },
   "databases": {
-    "json_location": "./data"
+    "json_location": "/mnt/c/Git/OdinssonBot/data"
   },
-  "images": "./images",
+  "images": "/mnt/c/Git/OdinssonBot/images",
   "logging": {
-    "file_location": "./logs"
+    "file_location": "/mnt/c/Git/OdinssonBot/logs"
   },
   "status_embed": {
     "online_color": "#39C16C",
