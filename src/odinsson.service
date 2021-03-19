@@ -1,0 +1,19 @@
+[Unit]
+Description=OdinssonBot for Valheim Server Assistance
+
+Wants=network.target
+After=syslog.target network.target nss-lookup.target network-online.target
+
+[Service]
+Type=simple
+ExecStart=/home/ubuntu/.nvm/versions/node/v12.21.0/bin/node /opt/OdinssonBot/src/app.js
+Restart=on-failure
+RestartSec=10
+StartLimitInterval=60s
+StartLimitBurst=3
+User=ubuntu
+Group=ubuntu
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target

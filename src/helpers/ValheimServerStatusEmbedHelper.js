@@ -173,7 +173,7 @@ class ValheimServerStatusEmbedHelper {
    */
   makeOnlineEmbed() {
     return new Promise((resolve, reject) => {
-      const screenshots = filesystem.readdirSync("./images/screenshots");
+      const screenshots = filesystem.readdirSync(`${this.config.images}/screenshots`);
       const randomScreenshot = screenshots[Math.floor(Math.random() * screenshots.length)];
       const randomTitle = this.config.status_embed.online_titles[Math.floor(Math.random() * this.config.status_embed.online_titles.length)];
       const randomDescription = this.config.status_embed.descriptions[Math.floor(Math.random() * this.config.status_embed.descriptions.length)];
@@ -186,7 +186,7 @@ class ValheimServerStatusEmbedHelper {
             .setColor(this.config.status_embed.online_color)
             .setTitle(randomTitle)
             .setDescription(`${randomDescription} ${text}:2456!`)
-            .attachFiles(["./images/hugin-sticker_256x205.png", `./images/screenshots/${randomScreenshot}`])
+            .attachFiles([`${this.config.images}/hugin-sticker_256x205.png`, `${this.config.images}/screenshots/${randomScreenshot}`])
             .setThumbnail("attachment://hugin-sticker_256x205.png")
             .setImage(`attachment://${randomScreenshot}`)
             .setFooter(randomFooter)
@@ -199,7 +199,7 @@ class ValheimServerStatusEmbedHelper {
             .setColor(this.config.status_embed.online_color)
             .setTitle(randomTitle)
             .setDescription(`${randomDescription} steam!`)
-            .attachFiles(["./images/hugin-sticker_256x205.png", `./images/screenshots/${randomScreenshot}`])
+            .attachFiles([`${this.config.images}/hugin-sticker_256x205.png`, `${this.config.images}/screenshots/${randomScreenshot}`])
             .setThumbnail("attachment://hugin-sticker_256x205.png")
             .setImage(`attachment://${randomScreenshot}`)
             .setFooter(randomFooter)
@@ -230,14 +230,14 @@ class ValheimServerStatusEmbedHelper {
           .setTimestamp()
         );
       } else {
-        const screenshots = filesystem.readdirSync("./images/screenshots");
+        const screenshots = filesystem.readdirSync("${this.config.images}/screenshots");
         const randomScreenshot = screenshots[Math.floor(Math.random() * screenshots.length)];
 
         resolve(new Discord.MessageEmbed()
           .setColor(this.config.status_embed.offline_color)
           .setTitle(randomTitle)
           .setDescription(`${randomDescription} ${this.config.status_embed.online_hours_blurb}`)
-          .attachFiles(["./images/hugin-sticker_256x205.png", `./images/screenshots/${randomScreenshot}`])
+          .attachFiles(["${this.config.images}/hugin-sticker_256x205.png", `${this.config.images}/screenshots/${randomScreenshot}`])
           .setThumbnail("attachment://hugin-sticker_256x205.png")
           .setImage(`attachment://${randomScreenshot}`)
           .setFooter(randomFooter)
