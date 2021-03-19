@@ -1,17 +1,48 @@
 {
-    "secrets": {
-      "token": "",
-      "client_id": "",
-      "client_secret": "",
-      "public_key": ""
-    },
-    "schedules": {
-      "backups": []
-    },
-    "databases": {
-      "json_location": ""
-    },
-    "logging": {
-      "file_location": ""
-    }
+  "secrets": {
+    "token": "",
+    "client_id": "",
+    "client_secret": "",
+    "public_key": ""
+  },
+  "aws": {
+    "ip_url": "http://169.254.169.254/latest/meta-data/local-ipv4"
+  },
+  "schedules": {
+    "backups": []
+  },
+  "databases": {
+    "json_location": "../data"
+  },
+  "logging": {
+    "file_location": "../logs"
+  },
+  "status_embed": {
+    "online_color": "#39C16C",
+    "offline_color": "#D73A49",
+    "online_titles": [
+      "You can hear the horns of Valheim!",
+      "The wind is gusting in Valheim!",
+      "Odin calls you to Valheim!",
+      "It's time to raid!"
+    ],
+    "descriptions": [
+      "Set sail on",
+      "Yggdrasil's branches touch valheim at"
+    ],
+    "footers": [
+      "No milk drinkers!",
+      "Don't chop the oak!",
+      "Have you seen Hugin?",
+      "Follow the raven!",
+      "Eikthyr, please stop your rambling...",
+      "Why is everything made by Charles?"
+    ],
+    "offline_titles": [
+      "The horns of Valheim are silent!",
+      "The winds have fallen in Valheim!",
+      "The víkingrs are horns deep in their mead!"
+    ],
+    "online_hours_blurb": "6pm-11pm weekdays and 9am-12am weekends!"
+  }
 }

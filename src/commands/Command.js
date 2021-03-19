@@ -3,7 +3,7 @@
   */
 class Command {
   /**
-   * @param {Logger} logger to log to.
+   * @param {Logger} logger used to log.
    */
   constructor(logger) {
     // Name of the command (for logging and help purposes).

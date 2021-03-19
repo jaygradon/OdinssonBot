@@ -11,7 +11,7 @@ const pongStrings = [
  */
 class PingCommand extends Command {
   /**
-   * @param {Logger} logger to log to.
+   * @param {Logger} logger used to log.
    */
   constructor(logger) {
     super(logger);
