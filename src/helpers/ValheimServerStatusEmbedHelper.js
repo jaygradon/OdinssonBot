@@ -224,7 +224,7 @@ class ValheimServerStatusEmbedHelper {
         resolve(new Discord.MessageEmbed(embed)
           .setColor(this.config.status_embed.offline_color)
           .setTitle(randomTitle)
-          .setDescription(`${randomDescription} `)
+          .setDescription(`${randomDescription} ${this.config.status_embed.online_hours_blurb}`)
           .attachFiles()
           .setFooter(randomFooter)
           .setTimestamp()
